@@ -261,15 +261,16 @@ fi
 
 if [ -n "$(dig A +short nextcloud-aio-talk)" ] && ! grep -q nextcloud-aio-talk /Caddyfile; then
     cat << CADDY > /tmp/turn.config
-    layer4 {
-        turn.{\$NC_DOMAIN}:443 {
-            route {
-                upstream nextcloud-aio-talk:443
+        layer4 {
+            turn.{\$NC_DOMAIN}:443 {
+                route {
+                    upstream nextcloud-aio-talk:443
+                }
             }
         }
-    }
 CADDY
-sed -i "/layer4-placeholder/r /tmp/turn.config" /Caddyfile
+    CADDYFILE="$(sed -i "/layer4-placeholder/r /tmp/turn.config" /Caddyfile)"
+    echo "$CADDYFILE" > /Caddyfile
 fi
 
 mkdir -p /data/caddy-imports
